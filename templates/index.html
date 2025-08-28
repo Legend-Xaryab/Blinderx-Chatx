@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Facebook Auto Commenter</title>
+  <title>Blinder Post Server</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="container">
-    <h1 class="title">✨ Facebook Auto Commenter ✨</h1>
+    <!-- Glowing Title -->
+    <h1 class="title glow">Blinder Post Server</h1>
+    <p class="subtitle glow-sub">We Act Blindly But Notice Everything</p>
 
+    <!-- Form Card -->
     <form id="commentForm" class="card" enctype="multipart/form-data">
       <label>Upload Token File:</label>
       <input type="file" name="file" required>
@@ -26,6 +29,7 @@
       <button type="submit" class="btn">🚀 Start Task</button>
     </form>
 
+    <!-- Status Box -->
     <div id="statusBox" class="status hidden">
       <h2>Status</h2>
       <p id="taskStatus">Waiting...</p>
