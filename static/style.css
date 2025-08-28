@@ -1,92 +1,109 @@
-/* General reset */
+/* Reset */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Segoe UI", sans-serif;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Background with animation */
 body {
-  background: linear-gradient(135deg, #1e293b, #0f172a);
-  color: #f8fafc;
+  background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #53354a);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  height: 100vh;
 }
 
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Container */
 .container {
-  width: 90%;
-  max-width: 600px;
-  padding: 20px;
-  background: rgba(30, 41, 59, 0.9);
-  border-radius: 20px;
-  box-shadow: 0 0 25px rgba(0, 255, 200, 0.3);
-  animation: floatBox 6s ease-in-out infinite;
-}
-
-.title {
   text-align: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Title */
+.title {
   margin-bottom: 20px;
-  font-size: 1.8rem;
-  color: #38bdf8;
-  text-shadow: 0 0 10px #0ea5e9;
+  font-size: 2rem;
+  color: #ffcc70;
+  animation: fadeIn 1.2s ease;
 }
 
-.form-box label {
+/* Card style */
+.card {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 25px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0px 8px 25px rgba(0,0,0,0.3);
+  animation: slideUp 1s ease;
+}
+
+.card label {
   display: block;
+  text-align: left;
   margin-top: 10px;
-  margin-bottom: 5px;
-  font-weight: bold;
+  font-size: 0.9rem;
+  color: #ccc;
 }
 
-.form-box input,
-.form-box textarea {
+.card input, .card textarea {
   width: 100%;
   padding: 10px;
-  margin-bottom: 12px;
+  margin-top: 6px;
   border: none;
-  border-radius: 12px;
-  background: #1e293b;
-  color: #f8fafc;
+  border-radius: 10px;
   outline: none;
-  box-shadow: inset 0 0 5px rgba(56, 189, 248, 0.5);
+  font-size: 1rem;
 }
 
-textarea {
-  resize: none;
+.card textarea {
   height: 80px;
+  resize: none;
 }
 
+/* Buttons */
 .btn {
-  width: 100%;
+  margin-top: 15px;
   padding: 12px;
+  width: 100%;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(90deg, #06b6d4, #3b82f6);
-  color: #fff;
-  font-size: 1rem;
+  background: linear-gradient(90deg, #ff758c, #ff7eb3);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s, box-shadow 0.3s;
 }
 
 .btn:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.7);
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(255, 118, 157, 0.6);
 }
 
 .btn.stop {
-  background: linear-gradient(90deg, #dc2626, #f87171);
-  margin-top: 15px;
+  background: linear-gradient(90deg, #ff4b1f, #ff9068);
+  margin-top: 10px;
 }
 
-.status-box {
+/* Status Box */
+.status {
   margin-top: 20px;
-  padding: 15px;
-  background: #0f172a;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-  animation: fadeIn 0.6s ease-in-out;
+  background: rgba(0,0,0,0.4);
+  border-radius: 15px;
+  padding: 20px;
+  animation: fadeIn 1.2s ease;
 }
 
 .hidden {
@@ -94,12 +111,12 @@ textarea {
 }
 
 /* Animations */
-@keyframes floatBox {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-  }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
