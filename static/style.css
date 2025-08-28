@@ -1,12 +1,12 @@
-/* Reset */
+/* ===== Reset ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
-/* Background with animation */
+/* ===== Body & Background ===== */
 body {
   background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #53354a);
   background-size: 400% 400%;
@@ -15,37 +15,71 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
+/* Gradient Animation */
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Container */
+/* ===== Container ===== */
 .container {
   text-align: center;
-  width: 100%;
+  width: 90%;
   max-width: 500px;
 }
 
-/* Title */
+/* ===== Title & Subtitle ===== */
 .title {
-  margin-bottom: 20px;
-  font-size: 2rem;
-  color: #ffcc70;
-  animation: fadeIn 1.2s ease;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 5px;
 }
 
-/* Card style */
+.subtitle {
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
+/* Glow Effect Title */
+.glow {
+  color: #fff;
+  text-shadow: 0 0 10px #ff0099, 0 0 20px #ff0099, 0 0 40px #00f0ff, 0 0 80px #00f0ff;
+  animation: glowShift 4s linear infinite;
+}
+
+.glow-sub {
+  color: #fff;
+  text-shadow: 0 0 5px #ffcc70, 0 0 10px #ffcc70, 0 0 20px #ff66cc;
+  animation: glowShiftSub 5s linear infinite alternate;
+  font-style: italic;
+}
+
+/* Glow Animations */
+@keyframes glowShift {
+  0% { text-shadow: 0 0 10px #ff0099, 0 0 20px #ff0099, 0 0 40px #00f0ff, 0 0 80px #00f0ff; }
+  25% { text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00, 0 0 40px #ff6600, 0 0 80px #ff6600; }
+  50% { text-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99, 0 0 40px #00ffcc, 0 0 80px #00ffcc; }
+  75% { text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #6600ff, 0 0 80px #6600ff; }
+  100% { text-shadow: 0 0 10px #ff0099, 0 0 20px #ff0099, 0 0 40px #00f0ff, 0 0 80px #00f0ff; }
+}
+
+@keyframes glowShiftSub {
+  0% { text-shadow: 0 0 5px #ffcc70, 0 0 10px #ffcc70, 0 0 15px #ff66cc; }
+  50% { text-shadow: 0 0 5px #70ffcc, 0 0 10px #70ffcc, 0 0 15px #66ccff; }
+  100% { text-shadow: 0 0 5px #ff70cc, 0 0 10px #ff70cc, 0 0 15px #cc66ff; }
+}
+
+/* ===== Card Form ===== */
 .card {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   padding: 25px;
   backdrop-filter: blur(10px);
-  box-shadow: 0px 8px 25px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   animation: slideUp 1s ease;
 }
 
@@ -53,6 +87,7 @@ body {
   display: block;
   text-align: left;
   margin-top: 10px;
+  margin-bottom: 5px;
   font-size: 0.9rem;
   color: #ccc;
 }
@@ -60,19 +95,22 @@ body {
 .card input, .card textarea {
   width: 100%;
   padding: 10px;
-  margin-top: 6px;
+  margin-bottom: 12px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   outline: none;
   font-size: 1rem;
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+  box-shadow: inset 0 0 5px rgba(255,255,255,0.2);
 }
 
-.card textarea {
-  height: 80px;
+textarea {
   resize: none;
+  height: 80px;
 }
 
-/* Buttons */
+/* ===== Buttons ===== */
 .btn {
   margin-top: 15px;
   padding: 12px;
@@ -97,7 +135,7 @@ body {
   margin-top: 10px;
 }
 
-/* Status Box */
+/* ===== Status Box ===== */
 .status {
   margin-top: 20px;
   background: rgba(0,0,0,0.4);
@@ -110,7 +148,7 @@ body {
   display: none;
 }
 
-/* Animations */
+/* ===== Animations ===== */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-15px); }
   to { opacity: 1; transform: translateY(0); }
@@ -119,4 +157,4 @@ body {
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
-}
+    }
