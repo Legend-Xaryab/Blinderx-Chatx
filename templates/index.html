@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Facebook Comment Poster</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">ðŸ’¬ Facebook Comment Poster</h1>
+
+    <form id="taskForm" class="form-box">
+      <label for="file">Upload Token File:</label>
+      <input type="file" id="file" name="file" required />
+
+      <label for="post_id_or_url">Post ID or URL:</label>
+      <input type="text" id="post_id_or_url" name="post_id_or_url" placeholder="Paste Facebook Post ID or URL" required />
+
+      <label for="comment">Comment Text:</label>
+      <textarea id="comment" name="comment" placeholder="Enter your comment..." required></textarea>
+
+      <label for="interval">Interval (seconds):</label>
+      <input type="number" id="interval" name="interval" value="10" min="1" />
+
+      <button type="submit" class="btn">ðŸš€ Start Task</button>
+    </form>
+
+    <div id="statusBox" class="status-box hidden">
+      <h2>Status</h2>
+      <p><strong>Task ID:</strong> <span id="taskId"></span></p>
+      <p><strong>Comments Posted:</strong> <span id="commentsPosted">0</span></p>
+      <p><strong>Active:</strong> <span id="active">False</span></p>
+      <p><strong>Last Result:</strong> <span id="lastResult">N/A</span></p>
+      <button id="stopBtn" class="btn stop">ðŸ›‘ Stop Task</button>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
