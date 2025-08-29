@@ -1,56 +1,54 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
-import threading
-import time
-import uuid
-import requests
-import re
+import threading, time, uuid, requests, re
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"  # Needed for sessions
+app.secret_key = "supersecretkey"
 
-# ------------------ Configuration ------------------ #
+# ---------- Config ----------
 VALID_USERNAME = "admin"
 VALID_PASSWORD = "secure123"
 GRAPH_API_URL = "https://graph.facebook.com/v17.0"
 tasks = {}
 
-# ------------------ Utility Functions ------------------ #
+# ---------- Utility Functions ----------
 def extract_post_id(post_url_or_id):
+    """Extract post ID from URL or return as-is if numeric"""
     if re.match(r"^\d+(_\d+)?$", post_url_or_id):
         return post_url_or_id
-    m = re.search(r"/posts/(\d+)", post_url_or_id)
-    if m: return m.group(1)
-    m = re.search(r"story_fbid=(\d+)", post_url_or_id)
-    if m: return m.group(1)
-    m = re.search(r"permalink\.php\?story_fbid=(\d+)", post_url_or_id)
-    if m: return m.group(1)
-    m = re.search(r"/\w+/posts/(\d+)", post_url_or_id)
-    if m: return m.group(1)
+    patterns = [
+        r"/posts/(\d+)",
+        r"story_fbid=(\d+)",
+        r"permalink\.php\?story_fbid=(\d+)",
+        r"/\w+/posts/(\d+)"
+    ]
+    for p in patterns:
+        m = re.search(p, post_url_or_id)
+        if m: return m.group(1)
     return None
 
 def verify_token(token):
+    """Check token validity"""
     url = f"{GRAPH_API_URL}/me"
-    params = {"access_token": token}
     try:
-        response = requests.get(url, params=params).json()
-        if "id" in response:
-            return True, response
-        return False, response
+        res = requests.get(url, params={"access_token": token}).json()
+        if "id" in res: return True, res
+        return False, res
     except Exception as e:
         return False, {"error": str(e)}
 
 def post_comment(token, post_id, message):
+    """Post comment safely on any post"""
     url = f"{GRAPH_API_URL}/{post_id}/comments"
     params = {"message": message, "access_token": token}
     try:
-        response = requests.post(url, params=params).json()
-        if "id" in response:
-            return {"success": True, "comment_id": response["id"]}
-        return {"success": False, "error": response}
+        res = requests.post(url, params=params).json()
+        if "id" in res: return {"success": True, "comment_id": res["id"]}
+        if "error" in res: return {"success": False, "error": res["error"]["message"]}
+        return {"success": False, "error": res}
     except Exception as e:
         return {"success": False, "error": str(e)}
 
-# ------------------ Routes ------------------ #
+# ---------- Routes ----------
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -78,7 +76,7 @@ def start_task():
     if 'file' in request.files:
         token_file = request.files['file']
         if token_file.filename != '':
-            tokens = [line.strip() for line in token_file.read().decode().splitlines() if line.strip()]
+            tokens += [line.strip() for line in token_file.read().decode().splitlines() if line.strip()]
 
     token_text = request.form.get("tokens")
     if token_text:
@@ -98,10 +96,10 @@ def start_task():
     if interval < 1:
         return jsonify({"success": False, "error": "Interval must be at least 1 second"})
 
-    # Verify tokens first
+    # Validate tokens
     valid_tokens = []
     for t in tokens:
-        is_valid, res = verify_token(t)
+        is_valid, info = verify_token(t)
         if is_valid:
             valid_tokens.append(t)
 
@@ -113,14 +111,14 @@ def start_task():
     tasks[task_id] = {"comments_posted": 0, "active": True, "last_result": None}
 
     def send_comments():
-        token_index = 0
+        index = 0
         while tasks[task_id]["active"]:
-            current_token = valid_tokens[token_index % len(valid_tokens)]
-            result = post_comment(current_token, post_id, comment)
+            token = valid_tokens[index % len(valid_tokens)]
+            result = post_comment(token, post_id, comment)
             tasks[task_id]["last_result"] = result
             if result["success"]:
                 tasks[task_id]["comments_posted"] += 1
-            token_index += 1
+            index += 1
             time.sleep(interval)
 
     threading.Thread(target=send_comments, daemon=True).start()
