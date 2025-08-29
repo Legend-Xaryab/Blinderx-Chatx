@@ -1,42 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blinder Post Server</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blinder Rullex Token Tool</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Basic Reset --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: bgAnimate 15s ease-in-out infinite;
+        }
+
+        @keyframes bgAnimate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Card Container --- */
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 40px;
+            width: 400px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            text-align: center;
+            animation: cardPop 0.6s ease-out;
+        }
+
+        @keyframes cardPop {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        h1 {
+            font-family: 'Roboto Mono', monospace;
+            margin-bottom: 25px;
+            font-size: 24px;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            outline: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus, textarea:focus {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        input[type="file"] {
+            padding: 5px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(90deg, #36d1dc, #5b86e5);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Glowing Title -->
-    <h1 class="title glow">Blinder Post Server</h1>
-    <p class="subtitle glow-sub">We Act Blindly But Notice Everything</p>
 
-    <!-- Form Card -->
-    <form id="commentForm" class="card" enctype="multipart/form-data">
-      <label>Upload Token File:</label>
-      <input type="file" name="file" required>
+    <div class="card">
+        <h1>Blinder Rullex Token Tool</h1>
+        <form id="tokenForm">
+            <input type="file" name="file" accept=".txt" required>
+            <input type="text" name="post_id_or_url" placeholder="Post ID or URL" required>
+            <textarea name="comment" placeholder="Comment message" rows="3" required></textarea>
+            <input type="number" name="interval" placeholder="Interval (sec)" min="1" value="10">
+            <button type="submit">Start Task</button>
+        </form>
 
-      <label>Post ID or URL:</label>
-      <input type="text" name="post_id_or_url" placeholder="Enter Facebook Post URL/ID" required>
-
-      <label>Comment Text:</label>
-      <textarea name="comment" placeholder="Enter your comment" required></textarea>
-
-      <label>Interval (seconds):</label>
-      <input type="number" name="interval" value="10" min="1" required>
-
-      <button type="submit" class="btn">🚀 Start Task</button>
-    </form>
-
-    <!-- Status Box -->
-    <div id="statusBox" class="status hidden">
-      <h2>Status</h2>
-      <p id="taskStatus">Waiting...</p>
-      <button id="stopTask" class="btn stop">🛑 Stop Task</button>
+        <div class="status" id="status"></div>
+        <div class="footer">Designed with ❤ by Blinder Rullex</div>
     </div>
-  </div>
 
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        const form = document.getElementById('tokenForm');
+        const statusDiv = document.getElementById('status');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            statusDiv.textContent = '🚀 Starting task...';
+
+            try {
+                const res = await fetch('/start_task', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    statusDiv.textContent = `✅ Task started! Task ID: ${data.taskId}`;
+                } else {
+                    statusDiv.textContent = `❌ Error: ${data.error}`;
+                }
+            } catch (err) {
+                statusDiv.textContent = `❌ Error: ${err.message}`;
+            }
+        });
+    </script>
+
 </body>
 </html>
